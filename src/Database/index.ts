@@ -14,4 +14,4 @@ export const sequelizeInstance = new sequelize.Sequelize({
     logging: false
 });
 
-export { default as members } from './members';
+export { default as commands } from './commands';

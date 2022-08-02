@@ -2,25 +2,34 @@ import sequelize, { Model } from "sequelize";
 import { sequelizeInstance } from ".";
 import { print } from "../Libs/logs";
 
-class members extends Model {
+class commands extends Model {
     declare id: BigInt;
     declare createdAt: Date;
     declare updatedAt: Date;
 }
 
-members.init({
+commands.init({
     id: {
         type: sequelize.BIGINT({ length: 32 }),
         primaryKey: true,
-        autoIncrement: false,
+        autoIncrement: true,
+        allowNull: false
+    },
+    name: {
+        type: sequelize.STRING(32),
+        allowNull: false,
+        unique: true
+    },
+    options: {
+        type: sequelize.JSON,
         allowNull: false
     }
 }, { sequelize: sequelizeInstance });
 
-members.sync({ alter: true }).then(() => {
-    print('Members table initialized', 'Database/Tables').success();
+commands.sync({ alter: true }).then(() => {
+    print('Commands table initialized', 'Database/Tables').success();
 }).catch(error => {
     print('Error: %s', 'Database', true).error(error);
 });
 
-export default members;
+export default commands;

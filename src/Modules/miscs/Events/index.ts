@@ -1,3 +1,3 @@
 export { logging } from './Logging';
 export { CommandHandler } from './CommandHandler';
-export { registerMembers } from './registerMembers';
+export { registerCommands } from './registerCommands';
