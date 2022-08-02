@@ -1,4 +1,4 @@
-import { Client, ClientOptions, REST, Routes } from 'discord.js';
+import { Client, ClientOptions, Guild, REST, Routes } from 'discord.js';
 import CommandOption from '../Interfaces/CommandOption';
 import * as database from '../Database';
 import * as log from '../Libs/logs';
@@ -10,6 +10,7 @@ export default class ExtendedClient extends Client {
     static modulesPath = path.join(__dirname, '../Modules');
     public Commands = new Map();
     public database = database;
+    public guild: Guild;
     public libs = {
         log
     };

@@ -5,5 +5,6 @@ export const logging: Event = {
     name: 'ready',
     run: (client: ExtendedClient) => {
         client.libs.log.print(`Logged in as %s`, 'Discord').success(client.user?.tag);
+        client.guild = client.guilds.cache.get(process.env.GUILD as string);
     }
 }
