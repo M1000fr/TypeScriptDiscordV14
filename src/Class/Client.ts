@@ -1,5 +1,6 @@
 import { Client, ClientOptions, REST, Routes } from 'discord.js';
 import CommandOption from '../Interfaces/CommandOption';
+import * as database from '../Database';
 import * as log from '../Libs/logs';
 import path from 'path';
 import 'dotenv/config';
@@ -8,6 +9,7 @@ import fs from 'fs';
 export default class ExtendedClient extends Client {
     static modulesPath = path.join(__dirname, '../Modules');
     public Commands = new Map();
+    public database = database;
     public libs = {
         log
     };
@@ -18,6 +20,12 @@ export default class ExtendedClient extends Client {
     }
 
     private async init() {
+        this.database.sequelizeInstance.authenticate().then(() => {
+            this.libs.log.print('Connected.', 'Database').success();
+        }).catch(error => {
+            this.libs.log.print('Error: %s', 'Database', true).error(error);
+        });
+
         await this.loadModules();
         await this.login(process.env.TOKEN);
         await this.pushCommandGuild();
