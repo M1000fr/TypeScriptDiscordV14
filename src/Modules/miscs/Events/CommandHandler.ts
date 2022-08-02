@@ -3,7 +3,7 @@ import Event from '../../../Interfaces/Event';
 import { CommandInteraction, Interaction } from 'discord.js';
 import ExtendedClient from "../../../Class/Client";
 
-const errorFunction = (client: ExtendedClient, interaction: CommandInteraction, cmdName: string, type: 'as any Handler' | 'not found in the Map') => {
+const errorFunction = (client: ExtendedClient, interaction: CommandInteraction, cmdName: string, type: 'as any Handler' | 'Handler is not an Function' | 'not found in the Map') => {
     client.libs.log.print(`%s as trying to execute %s but ${type}.`, "Command").error(interaction.user.tag, cmdName);
     interaction.reply({ content: `Command \`${cmdName}\` ${type}.`, ephemeral: true });
 }
@@ -21,18 +21,30 @@ export const CommandHandler: Event = {
 
         if (!sub && !subGroup) {
             if (!cmd.run) return errorFunction(client, interaction, name, 'as any Handler');
-            cmd.run(client, interaction);
+            try {
+                cmd.run(client, interaction);
+            } catch (error) {
+                return errorFunction(client, interaction, name, 'Handler is not an Function');
+            }
         }
         else if (sub && !subGroup) {
             const handler = (cmd.options.find(o => (o as any).name === sub) as any);
             if (!handler.run) return errorFunction(client, interaction, name, 'as any Handler');
-            handler.run(client, interaction);
+            try {
+                handler.run(client, interaction);
+            } catch (error) {
+                return errorFunction(client, interaction, name, 'Handler is not an Function');
+            }
         }
         else if (sub && subGroup) {
             const group = cmd.options.find(o => (o as any).name === subGroup) as any;
             const handler = (group.options.find(o => (o as any).name === sub) as any)
             if (!handler.run) return errorFunction(client, interaction, name, 'as any Handler');
-            handler.run(client, interaction);
+            try {
+                handler.run(client, interaction);
+            } catch (error) {
+                return errorFunction(client, interaction, name, 'Handler is not an Function');
+            }
         }
 
         client.libs.log.print(`%s as executing %s.`, "Command").log(interaction.user.tag, name);
