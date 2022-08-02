@@ -36,17 +36,22 @@ export default class ExtendedClient extends Client {
         for (const m of fs.readdirSync(ExtendedClient.modulesPath)) {
             const t1 = Date.now();
             // Events
-            const events = await import(path.join(ExtendedClient.modulesPath, m, 'Events'))
+            var events = await import(path.join(ExtendedClient.modulesPath, m, 'Events')),
+                eventCount = 0;
+
             for (const event in events) {
                 const e = events[event];
                 this.on(e.name, (...args) => e.run(this, ...args));
+                eventCount++;
             }
 
             // Commands
-            const cmdsFolder = fs.readdirSync(path.join(ExtendedClient.modulesPath, m, 'Commands'))
+            var cmdsFolder = fs.readdirSync(path.join(ExtendedClient.modulesPath, m, 'Commands')),
+                cmdCount = 0;
+
             for (var cmdFolder of cmdsFolder) {
                 const cmdFiles = fs.readdirSync(path.join(ExtendedClient.modulesPath, m, 'Commands', cmdFolder));
-                
+
                 if (!cmdFiles.includes('options.ts')) {
                     this.libs.log.print(`%s has no options file.`).error(`${m}/${cmdFolder}`);
                     continue;
@@ -54,9 +59,10 @@ export default class ExtendedClient extends Client {
 
                 const options = (await import(path.join(ExtendedClient.modulesPath, m, 'Commands', cmdFolder, 'options.ts'))).default as CommandOption;
                 this.Commands.set(options.name, options);
+                cmdCount++;
             }
 
-            this.libs.log.print(`Load %s in %sms.`, 'Modules').log(m, Date.now() - t1);
+            this.libs.log.print(`Load %s, %s commands, %s events, in %s ms.`, 'Modules').log(m, cmdCount, eventCount, Date.now() - t1);
         }
     }
 
