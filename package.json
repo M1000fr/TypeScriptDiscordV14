@@ -4,7 +4,8 @@
   "main": "index.ts",
   "scripts": {
     "run": "ts-node .",
-    "dev": "ts-node-dev ."
+    "dev": "ts-node-dev .",
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",
