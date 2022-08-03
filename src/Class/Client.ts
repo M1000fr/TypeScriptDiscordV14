@@ -5,6 +5,8 @@ import * as log from '../Libs/logs';
 import path from 'path';
 import 'dotenv/config';
 import fs from 'fs';
+import { Module } from '../Interfaces/Module';
+import Event from '../Interfaces/Event';
 
 export default class ExtendedClient extends Client {
     static modulesPath = path.join(__dirname, '../Modules');
@@ -35,23 +37,21 @@ export default class ExtendedClient extends Client {
     private async loadModules() {
         for (const m of fs.readdirSync(ExtendedClient.modulesPath)) {
             const t1 = Date.now();
-            // Events
-            var events = await import(path.join(ExtendedClient.modulesPath, m, 'Events')),
-                eventCount = 0;
+            const module = require(path.join(ExtendedClient.modulesPath, m)) as Module;
+            var eventCount = 0,
+                cmdCount = 0;
 
-            for (const event in events) {
-                const e = events[event];
-                this.on(e.name, (...args) => e.run(this, ...args));
+            // Events
+            for (const Event of Object.keys(module.Events)) {
+                const event = module.Events[Event] as Event;
+                this.on(event.name, (...args) => event.run(this, ...args));
                 eventCount++;
             }
 
             // Commands
-            var commands = await import(path.join(ExtendedClient.modulesPath, m, 'Commands')),
-                cmdCount = 0;
-
-            for (const command in commands) {
-                const options = commands[command] as CommandOption;
-                this.Commands.set(options.name, options);
+            for (const Command of Object.keys(module.Commands)) {
+                const command = module.Commands[Command] as CommandOption;
+                this.Commands.set(command.name, command);
                 cmdCount++;
             }
 
