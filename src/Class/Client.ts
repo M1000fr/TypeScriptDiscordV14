@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Guild, REST, Routes } from 'discord.js';
+import { Client, ClientOptions, Guild, Routes } from 'discord.js';
 import CommandOption from '../Interfaces/CommandOption';
 import * as database from '../Database';
 import * as log from '../Libs/logs';
