@@ -4,6 +4,8 @@ import { print } from "../Libs/logs";
 
 class commands extends Model {
     declare id: BigInt;
+    declare name: string;
+    declare options: string;
     declare createdAt: Date;
     declare updatedAt: Date;
 }
@@ -16,7 +18,7 @@ commands.init({
         allowNull: false
     },
     name: {
-        type: sequelize.STRING(32),
+        type: sequelize.STRING(),
         allowNull: false,
         unique: true
     },
@@ -26,7 +28,7 @@ commands.init({
     }
 }, { sequelize: sequelizeInstance });
 
-commands.sync({ alter: true }).then(() => {
+commands.sync().then(() => {
     print('Commands table initialized', 'Database/Tables').success();
 }).catch(error => {
     print('Error: %s', 'Database', true).error(error);
