@@ -61,6 +61,7 @@ export default class ExtendedClient extends Client {
 
     private async pushCommandGuild() {
         try {
+            if (!process.env.GUILD) return this.libs.log.print('No guild specified.', 'Commands').error();
             const data = Array.from(this.Commands.values());
             await this.rest.put(
                 Routes.applicationGuildCommands(this.user?.id.toString() as string, process.env.GUILD as string),
