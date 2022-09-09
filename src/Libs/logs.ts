@@ -1,6 +1,6 @@
 import moment from "moment";
 
-type Colors = 'Black' | 'Red' | 'Green' | 'Yellow' | 'Blue' | 'Magenta' | 'Cyan' | 'White' | 'grey' | 'reset';
+type Colors = 'Black' | 'Red' | 'Green' | 'Yellow' | 'Blue' | 'Magenta' | 'Cyan' | 'White' | 'grey' | 'Reset';
 
 const colors = {
     'Black': '\x1b[30m',
@@ -63,7 +63,7 @@ const log = (
 const print = (string: string, prefix?: string, inputAsPrimaryColor: boolean = false) => ({
     log: (...args: any[]) => log('LOG', 'Cyan', args)(prefix, string, inputAsPrimaryColor),
     success: (...args: any[]) => log('SUCCESS', 'Green', args)(prefix, string, inputAsPrimaryColor),
-    info: (...args: any[]) => log('INFO', 'reset', args)(prefix, string, inputAsPrimaryColor),
+    info: (...args: any[]) => log('INFO', 'Reset', args)(prefix, string, inputAsPrimaryColor),
     warn: (...args: any[]) => log('WARN', 'Yellow', args)(prefix, string, inputAsPrimaryColor),
     error: (...args: any[]) => log('ERROR', 'Red', args)(prefix, string, inputAsPrimaryColor)
 });
