@@ -1,8 +1,8 @@
 import moment from "moment";
 
-type Colors = 'Black' | 'Red' | 'Green' | 'Yellow' | 'Blue' | 'Magenta' | 'Cyan' | 'White' | 'grey' | 'Reset';
+type Colors = 'Black' | 'Red' | 'Green' | 'Yellow' | 'Blue' | 'Magenta' | 'Cyan' | 'White' | 'Reset';
 
-const colors = {
+const colors: {[key in Colors]: string} = {
     'Black': '\x1b[30m',
     'Red': '\x1b[31m',
     'Green': '\x1b[32m',
@@ -11,7 +11,7 @@ const colors = {
     'Magenta': '\x1b[35m',
     'Cyan': '\x1b[36m',
     'White': '\x1b[37m',
-    'Reset': '\x1b[0m',
+    'Reset': '\x1b[0m'
 };
 
 const propertys = {
@@ -25,7 +25,7 @@ const propertys = {
 
 moment.locale('fr');
 
-const paint = (string: string, color: Colors = 'reset') => {
+const paint = (string: string, color = 'reset') => {
     return `${colors[color]}${string}${colors.Reset}`;
 }
 
