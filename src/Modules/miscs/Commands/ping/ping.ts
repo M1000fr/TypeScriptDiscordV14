@@ -1,14 +1,11 @@
-import Command from "../../../../Interfaces/Command";
+import Commands from "../../../../Class/Commands";
+import options from './options';
 
-const index: Command = (_client, interaction) => {
-    const user = interaction.options.getUser('user');
-    if (!user) {
-        interaction.reply({ content: 'Pong !' });
-    } else {
-        interaction.reply({ content: `${user}, Pong !` });
-    }
-}
+const cmd = new Commands(options, []);
 
-export default {
-    index: index
-}
+cmd.setHandler({}, async (interaction) => {
+    interaction.reply({
+        content: 'Pong !',
+        ephemeral: true
+    });
+});

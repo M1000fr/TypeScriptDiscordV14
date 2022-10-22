@@ -1,5 +1,4 @@
-import { CommandData } from "../../../../Types/Command";
-import handler from './ping';
+import { ApplicationCommandData } from "discord.js";
 
 export default {
     name: 'ping',
@@ -10,6 +9,5 @@ export default {
             name: 'user',
             description: 'The user to ping'
         }
-    ],
-    run: handler.index
-} as CommandData;
+    ]
+} as ApplicationCommandData;

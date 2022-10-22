@@ -1,16 +1,16 @@
 import { Client, ClientOptions, Guild, Routes } from 'discord.js';
-import CommandOption from '../Interfaces/CommandOption';
 import * as database from '../Database';
 import * as log from '../Libs/logs';
 import path from 'path';
 import 'dotenv/config';
 import fs from 'fs';
-import { Module } from '../Interfaces/Module';
+import { Module } from '../Interfaces';
 import Event from '../Interfaces/Event';
+import Commands from './Commands';
 
 export default class ExtendedClient extends Client {
     static modulesPath = path.join(__dirname, '../Modules');
-    public Commands = new Map();
+    public Commands: Map<String, Commands> = new Map();
     public database = database;
     public guild: Guild;
     public libs = {
@@ -50,8 +50,8 @@ export default class ExtendedClient extends Client {
 
             // Commands
             for (const Command of Object.keys(module.Commands)) {
-                const command = module.Commands[Command] as CommandOption;
-                this.Commands.set(command.name, command);
+                const command = module.Commands[Command] as Commands;
+                this.Commands.set(command.options.name, command);
                 cmdCount++;
             }
 
@@ -60,16 +60,21 @@ export default class ExtendedClient extends Client {
     }
 
     private async pushCommandGuild() {
-        try {
-            if (!process.env.GUILD) return this.libs.log.print('No guild specified.', 'Commands').error();
-            const data = Array.from(this.Commands.values());
-            await this.rest.put(
-                Routes.applicationGuildCommands(this.user?.id.toString() as string, process.env.GUILD as string),
-                { body: data },
-            );
-            this.libs.log.print('Successfully reloaded application (/) commands.', 'Discord').success();
-        } catch (error) {
-            this.libs.log.print("%s").error(error);
-        }
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!process.env.GUILD) return this.libs.log.print('No guild specified.', 'Commands').error();
+
+                const data = Array.from(this.Commands.values()).map(c => c.options);
+                await this.rest.put(
+                    Routes.applicationGuildCommands(this.user?.id.toString() as string, process.env.GUILD),
+                    { body: data },
+                );
+
+                log.print('Commands registered on %s', 'Discord').success(process.env.GUILD);
+                resolve(true);
+            } catch (error) {
+                return reject(error);
+            }
+        })
     }
 }

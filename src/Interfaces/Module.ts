@@ -1,7 +1,7 @@
-import CommandOption from "./CommandOption";
-import Event from "./Event";
+import Command from "../Class/Commands";
+import { Event } from ".";
 
-export interface Module {
+export default interface Module {
     Events: Event[];
-    Commands: CommandOption[];
+    Commands: Command[];
 }
