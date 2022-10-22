@@ -1,1 +1,1 @@
-export { default as ping } from './ping/options';
+export { default as ping } from './ping';

@@ -44,8 +44,19 @@ export default class ExtendedClient extends Client {
             // Events
             for (const Event of Object.keys(module.Events)) {
                 const event = module.Events[Event] as Event;
-                this.on(event.name, (...args) => event.run(this, ...args));
-                eventCount++;
+                if (event.name) {
+                    this.on(event.name, (...args) => event.run(...args));
+                    eventCount++;
+                    continue;
+                } else {
+                    // Group of Events
+                    for (const Event of Object.keys(event)) {
+                        const e = event[Event] as Event;
+                        if (e.name) this.on(e.name, (...args) => e.run(...args));
+                        eventCount++;
+                        continue;
+                    }
+                }
             }
 
             // Commands
